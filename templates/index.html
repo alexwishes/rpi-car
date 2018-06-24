@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../static/jquery-ui.min.css">
     <style type="text/css">
     body,table,input {
         font-family: 'Microsoft YaHei';
@@ -74,6 +75,11 @@
 <table>
 	<tr>
 		<td></td>
+		<td><div id="slider"></div></td>
+		<td><input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;"></input></td>
+	</tr>
+	<tr>
+		<td></td>
 		<td><input type="button" operation="forward" class="up-btn btn"/></td>
 		<td></td>
 	</tr>
@@ -92,6 +98,7 @@
 </body>
 </html>
 <script type='text/javascript' src='../static/jquery.min.js'></script>
+<script type='text/javascript' src='../static/jquery-ui.min.js'></script>
 <script type="text/javascript">
     $(function(){
         setH();
@@ -107,7 +114,25 @@
                 }
             });
         });
+        $( "#slider" ).slider({
+          range: "max",
+          min: 1,
+          max: 100,
+          value: 2,
+          slide: function( event, ui ) {
+            $( "#amount" ).val( ui.value );
+            $.get("/pwm", {speed: ui.value}, function(data) {
+                if (data=="ok") {
+
+                } else {
+                    alert('system error')
+                }
+            });
+          }
+        });
+        $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
     });
+
     function setH(){
         var winHei = "", boxHei = "";
         winHei = $(window).height();
@@ -116,4 +141,5 @@
         console.log(boxHei);
         $('.control_panel').css('margin-top',(winHei-boxHei)/2);
     }
+
 </script>
